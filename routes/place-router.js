@@ -22,7 +22,16 @@ router.get('/:pid',(req,res)=>{
         return p.id===placeID
     })
     console.log('place',place)
-   res.json({place}) 
+    if(!place){
+        const error=new Error('Could not find a place for the provided id')
+        error.code=404
+        throw error
+        // res.status(404).json({message:'Could not find a place for the provided id'})
+    }
+    
+        res.json({place}) 
+    
+   
 })
 
 router.get('/user/:uid',(req,res)=>{
@@ -31,7 +40,15 @@ router.get('/user/:uid',(req,res)=>{
     const user=DUMMY_PLACES.find(u=>{
         return u.creator===userID
     })
+    if(!user){
+        const error=new Error('Could not find a place for the provided user id')
+        error.code=404
+       return next(error) // Here we use next because it goes to next middleware in this way
+        // res.status(404).json({message:'Could not find a place for the provided user id'})
+    }
+    
    res.json({user}) 
+    
 })
 
 module.exports=router
