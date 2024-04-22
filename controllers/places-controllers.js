@@ -31,20 +31,20 @@ const getPlaceById=(req, res, next)=>{
         res.json({place}) 
 }
 
-const getUserById=(req, res, next)=>{
+const getPlacesByUserId=(req, res, next)=>{
     const userID=req.params.uid
     console.log('id',userID)
-    const user=DUMMY_PLACES.find(u=>{
+    const places=DUMMY_PLACES.filter(u=>{
         return u.creator===userID
     })
-    if(!user){
-        const error=new Error('Could not find a place for the provided user id')
-        error.code=404
-       return next(new HttpError('Could not find a place for the provided user id', 404)) // Here we use next because it goes to next middleware in this way
+    if(!places || places.length===0){
+        // const error=new Error('Could not find a place for the provided user id')
+        // error.code=404
+       return next(new HttpError('Could not find place for the provided user id', 404)) // Here we use next because it goes to next middleware in this way
         // res.status(404).json({message:'Could not find a place for the provided user id'})
     }
     
-   res.json({user}) 
+   res.json({places}) 
 }
 
 const createPlace=(req,res,next)=>{
@@ -85,7 +85,7 @@ const deletePlace=(req,res,next)=>{
 }
 
 exports.getPlaceById=getPlaceById
-exports.getUserById=getUserById
+exports.getPlacesByUserId=getPlacesByUserId
 exports.createPlace=createPlace
 exports.updatePlace=updatePlace
 exports.deletePlace=deletePlace
