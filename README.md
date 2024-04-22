@@ -13,3 +13,11 @@ Error handling:
 When we put error as 1st argument in the middleware express will take it as an error handling middleware. So this middleware works for the requests where an error is thrown as a response .
 We use res.headerSent to check if a response is already sent or not . If not the next line. Now we set the status of the code in next line . Now in next line we check for an error message is present or not or we'll send an unknown error. 
 The throw error in the requests will trigger the error handling middleware
+
+Model View Controller (MVC):
+
+PAssing ourrouting logics to controllers
+
+bodyParser: 
+
+bodyParser.json() : This converts javascript data to regular objects and arrays
