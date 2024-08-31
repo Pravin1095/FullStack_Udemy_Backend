@@ -14,6 +14,8 @@ When we put error as 1st argument in the middleware express will take it as an e
 We use res.headerSent to check if a response is already sent or not . If not the next line. Now we set the status of the code in next line . Now in next line we check for an error message is present or not or we'll send an unknown error. 
 The throw error in the requests will trigger the error handling middleware
 
+When you pass an argument to next() in Express, it signals to the framework that an error has occurred. Express then skips all remaining non-error-handling middleware and routes, jumping directly to the error-handling middleware. This is a crucial mechanism for handling errors in an Express application.
+
 Model View Controller (MVC):
 
 PAssing ourrouting logics to controllers
