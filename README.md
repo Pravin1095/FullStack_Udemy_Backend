@@ -16,6 +16,10 @@ The throw error in the requests will trigger the error handling middleware
 
 When you pass an argument to next() in Express, it signals to the framework that an error has occurred. Express then skips all remaining non-error-handling middleware and routes, jumping directly to the error-handling middleware. This is a crucial mechanism for handling errors in an Express application.
 
+Validating API input request :
+
+Install a dependency express-validator with command npm install --save express-validator
+
 Model View Controller (MVC):
 
 PAssing ourrouting logics to controllers
