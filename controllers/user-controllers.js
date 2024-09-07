@@ -1,5 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const HttpError=require('../models/http-error')
+const {validationResult} = require('express-validator')
+
 let DUMMY_USERS=[
     {
         id: 'u1',
@@ -15,6 +17,11 @@ const getUserName=(req, res, next)=>{
 
 const signup=(req, res, next)=>{
     const {name , email ,password}=req.body
+    const errors=validationResult(req)
+    if(!errors.isEmpty()){
+        console.log('error', errors)
+        throw new HttpError('Invalid inputs passed . Please check your data', 422)
+    }
     const hasUser=DUMMY_USERS.find(data=>data.email===email)
     if(hasUser){
         throw new HttpError('Could not create user. Email already exists', 422)
