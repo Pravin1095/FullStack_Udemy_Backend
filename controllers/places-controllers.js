@@ -2,6 +2,8 @@ const HttpError=require('../models/http-error')
 const { v4: uuidv4 } = require('uuid');
 const {validationResult} = require('express-validator')
 
+const Place=require('../models/place.js')
+const getCoordsForAddress= require('../util/location.js');
 let DUMMY_PLACES= [{
     id: 'p1',
     title: 'Empire State Building',
@@ -48,23 +50,46 @@ const getPlacesByUserId=(req, res, next)=>{
    res.json({places}) 
 }
 
-const createPlace=(req,res,next)=>{
-    const {title,description,coordinates, address, creator}=req.body
+const createPlace=async (req,res,next)=>{
+    const {title,description, address, creator}=req.body
     const errors=validationResult(req)
     if(!errors.isEmpty()){
         console.log('error', errors)
-        throw new HttpError('Invalid inputs passed . Please check your data', 422)
+         next(new HttpError('Invalid inputs passed . Please check your data', 422))
     }
-    const createdPlace={
-        id:uuidv4(),
-        title:title,
-        description:description,
-        location:coordinates,
-        address:address,
-        creator:creator
+    let coordinates
+try{
+    coordinates=getCoordsForAddress(address)
+}catch(error){
+    return next(error)
+}
+    const createdPlace=new Place({
+        title,
+        description,
+        address,
+        location : coordinates,
+        image :'dummy url',
+        creator
+    })
+    // const createdPlace={
+    //     id:uuidv4(),
+    //     title:title,
+    //     description:description,
+    //     location:coordinates,
+    //     address:address,
+    //     creator:creator
 
+    // }
+    // DUMMY_PLACES.push(createdPlace)
+    try{
+        await createdPlace.save()
     }
-    DUMMY_PLACES.push(createdPlace)
+    catch(err){
+const error = new HttpError('Could not save in database', 500)
+return next(error) // this should be present else it won't stop executing and continues even after error
+    }
+   
+    
     res.status(201).json({place:createdPlace})
 }
 

@@ -32,3 +32,5 @@ bodyParser.json() : This converts javascript data to regular objects and arrays
 MongoDB :
 
 We should never connect React (client) directly to MongoDB di=ue to security reasons as users can access the database. So we need to connect React to Backend Node Express and from there to MongoDB
+
+Always use cooncetion string that has Node version above 2.2 in 'connect to your application' under divers

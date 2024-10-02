@@ -1,8 +1,9 @@
 const express=require('express')
 const bodyParser=require('body-parser')
 const HttpError=require('./models/http-error')
+const mongoose=require('mongoose')
 
-
+const url='mongodb://apravin3210:B3EiLC-vRuFUw8B@cluster1-shard-00-00.4p7ka.mongodb.net:27017,cluster1-shard-00-01.4p7ka.mongodb.net:27017,cluster1-shard-00-02.4p7ka.mongodb.net:27017/places_test?ssl=true&replicaSet=atlas-euhcrs-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster1'
 const placeRouter=require('./routes/place-router')
 const userRouter=require('./routes/user-router')
 const app=express();
@@ -25,4 +26,10 @@ app.use((error, req,res,next)=>{
     res.status(error.code || 500)
     res.json({message:error.message || 'An unknown error occured'})
 })
-app.listen(5000)
+
+mongoose.connect(url).then(()=>{
+    console.log('Connection successful')
+    app.listen(5000)
+}).catch((err)=>{
+    console.log(err)
+})

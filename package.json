@@ -19,7 +19,10 @@
   "homepage": "https://github.com/Pravin1095/FullStack_Udemy_Backend#readme",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-validator": "^7.2.0",
+    "mongoose": "^8.7.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
