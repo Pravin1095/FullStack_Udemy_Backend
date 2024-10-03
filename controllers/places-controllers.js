@@ -17,13 +17,32 @@ let DUMMY_PLACES= [{
     },
     creator: 'u1'
   }]
-const getPlaceById=(req, res, next)=>{
+
+  const getPlaces=async(req, res, next)=>{
+    try{
+    const allPlaces=await Place.find()
+    res.json(allPlaces)
+    }
+    catch(err){
+        const error=HttpError('Could not find any plces', 500)
+        return next(error)
+    }
+  }
+const getPlaceById=async (req, res, next)=>{
     const placeID=req.params.pid
-    console.log('id',placeID)
-    const place=DUMMY_PLACES.find(p=>{
-        return p.id===placeID
-    })
-    console.log('place',place)
+    // console.log('id',placeID)
+    // const place=DUMMY_PLACES.find(p=>{
+    //     return p.id===placeID
+    // })
+    // console.log('place',place)
+    let place
+    try{
+    place=await Place.findById(placeID)
+    }
+    catch(err){
+const error=new HttpError('Something went wrong, could not find a place', 500)
+return next(error)
+    }
     if(!place){
         // const error=new Error('Could not find a place for the provided id')
         // error.code=404
@@ -31,15 +50,25 @@ const getPlaceById=(req, res, next)=>{
         // res.status(404).json({message:'Could not find a place for the provided id'})
     }
     
-        res.json({place}) 
+        res.json({place: place.toObject({getters: true})}) 
 }
 
-const getPlacesByUserId=(req, res, next)=>{
+const getPlacesByUserId=async (req, res, next)=>{
     const userID=req.params.uid
-    console.log('id',userID)
-    const places=DUMMY_PLACES.filter(u=>{
-        return u.creator===userID
-    })
+    // console.log('id',userID)
+    // const places=DUMMY_PLACES.filter(u=>{
+    //     return u.creator===userID
+    // })
+
+    let places
+    try{
+        places=await Place.find({creator: userID})
+    }
+    catch(err){
+        const error=HttpError('Could not find a place for entered creator')
+        return next(error)
+    }
+
     if(!places || places.length===0){
         // const error=new Error('Could not find a place for the provided user id')
         // error.code=404
@@ -122,6 +151,7 @@ const deletePlace=(req,res,next)=>{
 
 }
 
+exports.getPlaces=getPlaces
 exports.getPlaceById=getPlaceById
 exports.getPlacesByUserId=getPlacesByUserId
 exports.createPlace=createPlace

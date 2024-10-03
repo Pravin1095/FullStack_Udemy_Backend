@@ -5,6 +5,8 @@ const HttpError=require('../models/http-error')
 const {check}= require('express-validator')
 const placesControllers=require('../controllers/places-controllers')
 
+router.get('/', placesControllers.getPlaces)
+
 router.get('/:pid',placesControllers.getPlaceById)
    
 
