@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Pravin1095/FullStack_Udemy_Backend#readme",
   "dependencies": {
+    "@ladjs/mongoose-unique-validator": "^5.0.0",
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
     "express-validator": "^7.2.0",
