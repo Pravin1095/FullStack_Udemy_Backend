@@ -12,8 +12,17 @@ let DUMMY_USERS=[
     }
 ]
 
-const getUserName=(req, res, next)=>{
-    res.status(200).json({users: DUMMY_USERS})
+const getUserName=async (req, res, next)=>{
+    // res.status(200).json({users: DUMMY_USERS})
+    let users
+    try{
+        users=await User.find()
+    }
+    catch(err){
+        const error=new HttpError('Could not find a user for the given email', 500)
+        return next(error)
+    }
+    res.status(200).json({users: users})
 }
 
 const signup=async (req, res, next)=>{
@@ -66,15 +75,34 @@ return next(err)
     res.status(201).json({user : createdUser.toObject({getters: true})})
 }
 
-const login=(req, res, next)=>{
+const login=async (req, res, next)=>{
     const {email,password}= req.body
-    console.log('dum', DUMMY_USERS)
-    const checkMail=DUMMY_USERS.find(user=>
-        user.email===email
-    )
-    if(!checkMail || checkMail.password!==password){
-        // res.status(404).json({message:'Mail ID unavailable'})
-        throw new HttpError('Could not find the provided credentiaals', 401)
+    // console.log('dum', DUMMY_USERS)
+    // const checkMail=DUMMY_USERS.find(user=>
+    //     user.email===email
+    // )
+    // if(!checkMail || checkMail.password!==password){
+    //     // res.status(404).json({message:'Mail ID unavailable'})
+    //     throw new HttpError('Could not find the provided credentiaals', 401)
+    // }
+    let existingUser
+   
+    try{
+        existingUser=await User.find({email:email})
+        console.log('exisitningUSer', existingUser)
+        if(existingUser.length==0){
+            console.log('hello empty existing')
+            const error=new HttpError("Sorry, could not find the email id that you've entered. Please, try again", 422)
+            return next(error)
+        }
+        if(password!==existingUser[0].password){
+            const error=new HttpError("Sorry, Incorrect password", 422)
+            return next(error)
+        }
+    }
+    catch(err){
+        const error=new HttpError("Something went wrong, please try again later", 500)
+            return next(error)
     }
    res.json({message: 'Login successful'})
     
