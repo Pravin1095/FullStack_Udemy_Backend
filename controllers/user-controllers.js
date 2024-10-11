@@ -16,13 +16,13 @@ const getUserName=async (req, res, next)=>{
     // res.status(200).json({users: DUMMY_USERS})
     let users
     try{
-        users=await User.find()
+        users=await User.find({}, '-password') //- password means explicitly we are saying the database to remove password field alone. we can also write in alternate way like 'email, name' means it shows email and name
     }
     catch(err){
-        const error=new HttpError('Could not find a user for the given email', 500)
+        const error=new HttpError('Could not find users', 500)
         return next(error)
     }
-    res.status(200).json({users: users})
+    res.status(200).json({users: users.map(users=>users.toObject({getters: true}))})
 }
 
 const signup=async (req, res, next)=>{
