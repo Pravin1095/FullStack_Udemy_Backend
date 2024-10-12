@@ -26,7 +26,7 @@ const getUserName=async (req, res, next)=>{
 }
 
 const signup=async (req, res, next)=>{
-    const {name , email ,password, places}=req.body
+    const {name , email ,password}=req.body
     const errors=validationResult(req)
     if(!errors.isEmpty()){
         console.log('error', errors)
@@ -63,7 +63,7 @@ name,
 email,
 image: 'dummy url',
 password,
-places
+places: []
     })
     await createdUser.save()
 }

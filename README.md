@@ -34,3 +34,7 @@ MongoDB :
 We should never connect React (client) directly to MongoDB di=ue to security reasons as users can access the database. So we need to connect React to Backend Node Express and from there to MongoDB
 
 Always use cooncetion string that has Node version above 2.2 in 'connect to your application' under divers
+
+Transactions and sessions in mongoose:
+
+Transactions allows you to perform multiple operations in isolation of each other and transactions are built on sessions. So to work with these transactions we need to first start the sessions, then we can initiate the transaction, with that the place is created and the place is stored in our users document
