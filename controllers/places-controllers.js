@@ -62,23 +62,23 @@ const getPlacesByUserId=async (req, res, next)=>{
     //     return u.creator===userID
     // })
 
-    let places
+    let userWithPlaces
     try{
-        places=await Place.find({creator: userID})
+        userWithPlaces=await User.findById(userID).populate('places')
     }
     catch(err){
         const error=HttpError('Could not find a place for entered creator')
         return next(error)
     }
 
-    if(!places || places.length===0){
+    if(!userWithPlaces || userWithPlaces.places.length===0){
         // const error=new Error('Could not find a place for the provided user id')
         // error.code=404
        return next(new HttpError('Could not find place for the provided user id', 404)) // Here we use next because it goes to next middleware in this way
         // res.status(404).json({message:'Could not find a place for the provided user id'})
     }
     
-   res.json({places}) 
+   res.json({places : userWithPlaces.places.map(place=>place.toObject({getters: true}))}) 
 }
 
 const createPlace=async (req,res,next)=>{
