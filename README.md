@@ -38,3 +38,12 @@ Always use cooncetion string that has Node version above 2.2 in 'connect to your
 Transactions and sessions in mongoose:
 
 Transactions allows you to perform multiple operations in isolation of each other and transactions are built on sessions. So to work with these transactions we need to first start the sessions, then we can initiate the transaction, with that the place is created and the place is stored in our users document
+
+push:
+This method is not a JS method and it is a mongoose method that helps in establishing connection between the two models that we are referinng, behind the scenes mongodb grabs the createdPlace id tht's an integrated feature of mongodb and adds it to place field of the user
+
+Only after commitTransaction gets executed the places and users will be saved successfully
+
+populate:
+
+This allows us to refer to a document that is stored in another collection and to work with that data in the existing document of that other collection. The relations are given with the refs in the model code and only if this relation exists the populate method works. We need to pass a property(creator in our case) in it and mongoose searches for the property in the user collection

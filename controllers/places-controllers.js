@@ -182,11 +182,30 @@ const deletePlace=async (req,res,next)=>{
     // DUMMY_PLACES=DUMMY_PLACES.filter(p=>p.id!==pid)
     let places
     try{
-        places=await Place.findByIdAndDelete(pid)
+        places=await Place.findById(pid).populate('creator')
+        
     }
     catch(err){
 const error=new HttpError('Could not delete places', 500)
 return next(error)
+    }
+    if(!places){
+        const error=new HttpError('Could not find place for this id', 404)
+        return next(error)
+    }
+    try{
+        const sess=await mongoose.startSession()
+        sess.startTransaction()
+        await Place.deleteOne({ _id: places._id }, { session: sess });
+        console.log('usercheck', places.creator)
+        places.creator.places.pull(places)
+        await places.creator.save({session: sess})
+        await sess.commitTransaction()
+       
+    }
+    catch(err){
+        const error=new HttpError('Something went wrong, could not delete place', 500)
+        return next(err)
     }
     res.json({message:'Deleted place successfully!'})
 
