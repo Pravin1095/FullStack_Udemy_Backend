@@ -3,13 +3,20 @@ const bodyParser=require('body-parser')
 const HttpError=require('./models/http-error')
 const mongoose=require('mongoose')
 
-const url='mongodb://apravin3210:B3EiLC-vRuFUw8B@cluster1-shard-00-00.4p7ka.mongodb.net:27017,cluster1-shard-00-01.4p7ka.mongodb.net:27017,cluster1-shard-00-02.4p7ka.mongodb.net:27017/places_test?ssl=true&replicaSet=atlas-euhcrs-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster1'
+const url='mongodb://apravin3210:B3EiLC-vRuFUw8B@cluster1-shard-00-00.4p7ka.mongodb.net:27017,cluster1-shard-00-01.4p7ka.mongodb.net:27017,cluster1-shard-00-02.4p7ka.mongodb.net:27017/mern?ssl=true&replicaSet=atlas-euhcrs-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster1'
 const placeRouter=require('./routes/place-router')
 const userRouter=require('./routes/user-router')
 const app=express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+app.use((req, res, next)=>{
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE')
+    next()
+})
 app.use('/api/places', placeRouter)  //Now we have added the route as a middleware in app.js . By giving /api/places in 1st argument we filter the routes according to this
 app.use('/api/users', userRouter )
 
@@ -17,6 +24,8 @@ app.use((req,res, next)=>{
     const error=new HttpError('Could not find this route', 404)
     throw error
 })
+
+
 
 app.use((error, req,res,next)=>{
     console.log('check',error)
